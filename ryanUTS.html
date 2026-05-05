@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To Do List – UTS PBW</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --accent: #4f46e5;
+      --accent-light: #eef2ff;
+      --accent-dark: #3730a3;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --text: #1e1b4b;
+      --muted: #6b7280;
+      --surface: #ffffff;
+      --bg: #f5f3ff;
+      --border: #e0e7ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    
+    .identity-header {
+      background: linear-gradient(135deg, #1a6eb5 0%, #2d8fd4 50%, #3aa0e8 100%);
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    }
+    .identity-header .logos {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .identity-header .logos img {
+      height: 150px;
+      width: 150px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    .identity-header .divider {
+      width: 2px;
+      height: 60px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .identity-header .info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .identity-header .info .label {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.75);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .identity-header .info .nama {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+    .identity-header .info .nim {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .identity-header .info .matkul {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .identity-header .info .matkul span {
+      background: rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 1px 10px;
+      font-size: 0.78rem;
+      margin-right: 4px;
+    }
+
+    .site-header {
+      background: #155fa0;
+      padding: 0.45rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .site-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+    .site-header span {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .main-wrapper {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.25rem;
+    }
+
+    .desc-card {
+      background: var(--accent);
+      border-radius: 1.25rem;
+      padding: 2rem 1.75rem;
+      color: #fff;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .desc-card::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      top: -60px;
+      right: -60px;
+    }
+    .desc-card::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      bottom: -40px;
+      left: -30px;
+    }
+    .desc-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .desc-card p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      line-height: 1.7;
+    }
+    .desc-card .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
+    }
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.2rem 0 0;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.875rem;
+      opacity: 0.9;
+      margin-bottom: 0.75rem;
+    }
+    .feature-list li i {
+      margin-top: 2px;
+      flex-shrink: 0;
+      color: #a5f3fc;
+    }
+
+    .todo-card {
+      background: var(--surface);
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 24px rgba(79,70,229,0.08);
+      overflow: hidden;
+    }
+
+  
+    .form-section {
+      padding: 1.75rem 1.75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .form-section h5 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .form-control {
+      border: 1.5px solid var(--border);
+      border-radius: 0.6rem;
+      font-size: 0.875rem;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+    }
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .btn-save {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 0.5rem 1.4rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-save:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+    .btn-save:active { transform: translateY(0); }
+    #editBadge {
+      display: none;
+      font-size: 0.78rem;
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 2px 12px;
+      vertical-align: middle;
+    }
+
+ 
+    .table-section {
+      padding: 1.5rem 1.75rem 2rem;
+    }
+    .table-section h5 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .table {
+      font-size: 0.875rem;
+    }
+    .table thead tr {
+      background: var(--accent-light);
+    }
+    .table thead th {
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: none;
+      padding: 0.75rem 1rem;
+    }
+    .table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .table tbody tr:hover { background: var(--accent-light); }
+    .table tbody td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      border: none;
+    }
+    .table tbody tr.done-row td:not(:last-child):not(:nth-last-child(2)) {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    
+    .form-check-input {
+      width: 1.2em;
+      height: 1.2em;
+      cursor: pointer;
+      accent-color: var(--accent);
+    }
+
+    .btn-edit {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: none;
+      border-radius: 0.4rem;
+      padding: 4px 10px;
+      transition: background 0.15s;
+    }
+    .btn-edit:hover { background: #c7d2fe; }
+    .btn-hapus {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--danger);
+      background: #fee2e2;
+      border: none;
+      border-radius: 0.4rem;
+      padding: 4px 10px;
+      transition: background 0.15s;
+    }
+    .btn-hapus:hover { background: #fca5a5; }
+
+    #emptyState {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    #emptyState i { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.4; }
+
+   
+    .count-badge {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 1px 10px;
+      margin-left: 6px;
+    }
+
+   
+    @keyframes rowIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .new-row { animation: rowIn 0.25s ease; }
+  </style>
+</head>
+<body>
+
+ 
+  <header class="identity-header">
+    <div class="logos">
+      <img src="https://dinus.ac.id/wp-content/uploads/2024/11/Logo-Web-Udinus-Putih.png"
+           alt="Logo UDINUS"
+           onerror="this.style.display='none'" />
+    </div>
+    <div class="divider"></div>
+    <div class="info">
+      <div class="nama">MUHAMMAD TAUFIK RYANSYAH</div>
+      <div class="nim">NIM: A18.2025.00189</div>
+      <div class="matkul">
+        <span>UTS</span> To Do List dengan JavaScript &nbsp;&middot;&nbsp; Pemrograman Berbasis Web
+      </div>
+    </div>
+  </header>
+
+  <div class="site-header">
+    <i class="bi bi-check2-square" style="font-size:1.1rem;color:#fff;"></i>
+    <h1>To Do List App</h1>
+    <span>Dosen: Ibnu Utomo W, M.Kom</span>
+  </div>
+
+  
+  <div class="main-wrapper">
+    <div class="row g-4">
+
+      <div class="col-lg-4">
+        <div class="desc-card">
+          <h2><i class="bi bi-journal-text me-2"></i>Deskripsi Program</h2>
+          <p>
+            Aplikasi <strong>To Do List</strong> ini dibuat menggunakan <strong>HTML, Bootstrap 5,</strong> dan
+            <strong>JavaScript</strong> murni. Memungkinkan pengguna untuk mencatat, mengelola, dan menyelesaikan
+            kegiatan harian dengan mudah.
+          </p>
+          <ul class="feature-list">
+            <li><i class="bi bi-plus-circle-fill"></i>Tambah kegiatan beserta tanggal pelaksanaan</li>
+            <li><i class="bi bi-pencil-fill"></i>Edit kegiatan yang sudah ditambahkan</li>
+            <li><i class="bi bi-trash-fill"></i>Hapus kegiatan dari daftar</li>
+            <li><i class="bi bi-check-circle-fill"></i>Tandai kegiatan sebagai selesai via checkbox</li>
+            <li><i class="bi bi-bootstrap-fill"></i>Dibangun dengan Bootstrap 5 & vanilla JS</li>
+          </ul>
+          <div style="margin-top:1.5rem;">
+            <span class="badge-pill"><i class="bi bi-mortarboard-fill"></i> UTS Genap 2025/2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="todo-card">
+
+         
+          <div class="form-section">
+            <h5><i class="bi bi-pencil-square me-2"></i>Form To Do List <span id="editBadge">✏️ Mode Edit</span></h5>
+            <div class="row g-3 align-items-end">
+              <div class="col-md-5">
+                <label class="form-label">Nama Kegiatan</label>
+                <input type="text" id="inputNama" class="form-control" placeholder="Cth: Mengerjakan project A" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Tanggal Kegiatan</label>
+                <input type="date" id="inputTanggal" class="form-control" />
+              </div>
+              <div class="col-md-3 d-flex gap-2">
+                <button class="btn-save w-100" onclick="simpan()">
+                  <i class="bi bi-floppy-fill me-1"></i>Simpan
+                </button>
+                <button id="btnBatal" class="btn btn-outline-secondary btn-sm" onclick="batalEdit()" style="display:none;border-radius:0.6rem;">
+                  Batal
+                </button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="table-section">
+            <h5>
+              <i class="bi bi-table me-2"></i>Daftar Kegiatan
+              <span class="count-badge" id="countBadge">0</span>
+            </h5>
+            <div class="table-responsive">
+              <table class="table" id="todoTable">
+                <thead>
+                  <tr>
+                    <th style="width:50px;">No</th>
+                    <th>Nama Kegiatan</th>
+                    <th style="width:130px;">Tanggal</th>
+                    <th style="width:80px;">Selesai</th>
+                    <th style="width:120px;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="todoBody">
+                
+                </tbody>
+              </table>
+              <div id="emptyState">
+                <i class="bi bi-inbox"></i>
+                Belum ada kegiatan. Tambahkan kegiatan pertamamu!
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    
+    let todos = [];
+    let editId = null;
+    let nextId = 1;
+
+
+    function formatTanggal(dateStr) {
+      if (!dateStr) return '-';
+      const [y, m, d] = dateStr.split('-');
+      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+    }
+
+    
+    function render() {
+      const tbody = document.getElementById('todoBody');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('countBadge');
+
+      count.textContent = todos.length;
+      tbody.innerHTML = '';
+
+      if (todos.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      todos.forEach((todo, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'new-row' + (todo.selesai ? ' done-row' : '');
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${todo.nama}</td>
+          <td>${formatTanggal(todo.tanggal)}</td>
+          <td class="text-center">
+            <input type="checkbox" class="form-check-input"
+              ${todo.selesai ? 'checked' : ''}
+              onchange="toggleSelesai(${todo.id})" />
+          </td>
+          <td>
+            <button class="btn-edit me-1" onclick="edit(${todo.id})">
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="btn-hapus" onclick="hapus(${todo.id})">
+              <i class="bi bi-trash"></i> Hapus
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    
+    function simpan() {
+      const nama    = document.getElementById('inputNama').value.trim();
+      const tanggal = document.getElementById('inputTanggal').value;
+
+      if (!nama) {
+        alert('Nama kegiatan tidak boleh kosong!');
+        document.getElementById('inputNama').focus();
+        return;
+      }
+
+      if (editId !== null) {
+        
+        const idx = todos.findIndex(t => t.id === editId);
+        if (idx !== -1) {
+          todos[idx].nama    = nama;
+          todos[idx].tanggal = tanggal;
+        }
+        batalEdit();
+      } else {
+        
+        todos.push({ id: nextId++, nama, tanggal, selesai: false });
+        document.getElementById('inputNama').value    = '';
+        document.getElementById('inputTanggal').value = '';
+      }
+      render();
+    }
+
+    
+    function edit(id) {
+      const todo = todos.find(t => t.id === id);
+      if (!todo) return;
+
+      editId = id;
+      document.getElementById('inputNama').value    = todo.nama;
+      document.getElementById('inputTanggal').value = todo.tanggal;
+      document.getElementById('editBadge').style.display   = 'inline';
+      document.getElementById('btnBatal').style.display    = 'inline-block';
+      document.getElementById('inputNama').focus();
+    }
+
+    
+    function batalEdit() {
+      editId = null;
+      document.getElementById('inputNama').value    = '';
+      document.getElementById('inputTanggal').value = '';
+      document.getElementById('editBadge').style.display = 'none';
+      document.getElementById('btnBatal').style.display  = 'none';
+    }
+
+    
+    function hapus(id) {
+      if (!confirm('Hapus kegiatan ini?')) return;
+      todos = todos.filter(t => t.id !== id);
+      if (editId === id) batalEdit();
+      render();
+    }
+
+    
+    function toggleSelesai(id) {
+      const idx = todos.findIndex(t => t.id === id);
+      if (idx !== -1) todos[idx].selesai = !todos[idx].selesai;
+      render();
+    }
+
+    
+    render();
+  </script>
+</body>
+</html>
